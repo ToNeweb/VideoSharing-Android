@@ -421,7 +421,9 @@ private data class CodeAnimationHelper(
                 )
             )
 
-            if (isStatusUpdating) {
+            if (isStatusUpdating && isSuccess) {
+                appState.navigateTo(Route.LoginUsername)
+            } else if (isStatusUpdating) {
                 isReverseStatusUpdating = true
                 isStatusUpdating = false
                 colorExitIndex = -1
@@ -430,10 +432,6 @@ private data class CodeAnimationHelper(
             } else if (isReverseStatusUpdating) {
                 isReverseStatusUpdating = false
                 statusFraction.animateTo(0f)
-
-                if (isSuccess) {
-                    appState.navigateTo(Route.LoginUsername)
-                }
             }
         }
     }
