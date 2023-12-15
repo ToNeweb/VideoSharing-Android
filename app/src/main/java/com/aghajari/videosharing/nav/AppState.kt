@@ -14,7 +14,13 @@ class AppState(
     val navController: NavHostController
 ) {
 
-    fun navigateTo(route: Route) {
+    fun navigateTo(
+        route: Route,
+        pop: Boolean = false
+    ) {
+        if (pop) {
+            navController.popBackStack()
+        }
         navController.navigate(route.name)
     }
 }

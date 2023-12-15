@@ -56,7 +56,7 @@ fun LoginUsername() {
                 append("Hi, Welcome to ")
                 bold("VideoSharing")
                 append("!\n")
-                append("Please choose a username for your account.")
+                append("Please choose a username.")
             },
             color = MaterialTheme.colorScheme.onSecondary,
             style = MaterialTheme.typography.bodyLarge,
@@ -71,7 +71,7 @@ fun LoginUsername() {
                 bold("a-z")
                 append(", ")
                 bold("0-9")
-                append("and underscores.\n")
+                append(" and underscores.\n")
                 append("Minimum length is ")
                 bold("4")
                 append(" characters.")
@@ -96,10 +96,10 @@ private fun UsernameField(
         keyboardType = KeyboardType.Text
     ) { text ->
         scope.launch {
-            if (loginViewModel.updateEmailAddress(text)) {
+            if (loginViewModel.updateUsername(text)) {
                 hideKeyboard(view)
                 delay(200)
-                appState.navigateTo(Route.LoginValidation)
+
             }
         }
     }

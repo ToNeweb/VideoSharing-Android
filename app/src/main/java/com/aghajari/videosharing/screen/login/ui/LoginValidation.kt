@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -77,7 +78,9 @@ fun LoginValidationScreen(
     loginViewModel.clearValidation()
 
     if (code.text.value.length == 5) {
-        loginViewModel.validateCode(code.text.value)
+        LaunchedEffect(code.text.value) {
+            loginViewModel.validateCode(code.text.value)
+        }
     }
 
     Column(
@@ -287,9 +290,11 @@ private data class CodeAnimationHelper(
             isSuccess = status == ValidationStatus.SUCCESS
             animateStatusColor()
 
-            scaledText = text.value
-            text.value = ""
-            animateScale()
+            if (!isSuccess) {
+                scaledText = text.value
+                text.value = ""
+                animateScale()
+            }
         }
     }
 
@@ -422,7 +427,9 @@ private data class CodeAnimationHelper(
             )
 
             if (isStatusUpdating && isSuccess) {
-                appState.navigateTo(Route.LoginUsername)
+                isStatusUpdating = false
+                isSuccess = false
+                appState.navigateTo(Route.LoginUsername, true)
             } else if (isStatusUpdating) {
                 isReverseStatusUpdating = true
                 isStatusUpdating = false
