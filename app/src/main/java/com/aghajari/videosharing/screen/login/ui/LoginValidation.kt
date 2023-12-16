@@ -41,10 +41,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aghajari.videosharing.R
+import com.aghajari.videosharing.model.ScreenState
+import com.aghajari.videosharing.model.hasResponse
 import com.aghajari.videosharing.nav.AppState
 import com.aghajari.videosharing.nav.LocalAppState
 import com.aghajari.videosharing.nav.Route
-import com.aghajari.videosharing.screen.login.model.ValidationStatus
 import com.aghajari.videosharing.screen.login.viewmodel.LoginViewModel
 import com.aghajari.videosharing.ui.animation.OvershootEasing
 import com.aghajari.videosharing.ui.component.Image
@@ -67,15 +68,15 @@ fun LoginValidationScreen(
         CodeAnimationHelper(
             scope,
             appState,
+            loginViewModel,
             selectedColor.toArgb(),
             defaultColor.toArgb(),
             Color.Red.toArgb(),
             Color.Green.toArgb()
         )
     }
-    val status = loginViewModel.validationStatus.collectAsState()
-    code.updateValidationStatus(status.value)
-    loginViewModel.clearValidation()
+    val state = loginViewModel.state.collectAsState()
+    code.updateValidationStatus(state.value)
 
     if (code.text.value.length == 5) {
         LaunchedEffect(code.text.value) {
@@ -259,6 +260,7 @@ private fun RowScope.KeyboardButton(
 private data class CodeAnimationHelper(
     val scope: CoroutineScope,
     val appState: AppState,
+    val loginViewModel: LoginViewModel,
     val selectedColor: Int,
     val defaultColor: Int,
     val errorColor: Int,
@@ -283,11 +285,11 @@ private data class CodeAnimationHelper(
     var scaledText: String = ""
         private set
 
-    fun updateValidationStatus(status: ValidationStatus) {
-        if (status != ValidationStatus.NO_RES) {
+    fun updateValidationStatus(state: ScreenState) {
+        if (state.hasResponse()) {
             isStatusUpdating = true
             isReverseStatusUpdating = false
-            isSuccess = status == ValidationStatus.SUCCESS
+            isSuccess = state == ScreenState.SUCCESS
             animateStatusColor()
 
             if (!isSuccess) {
@@ -295,6 +297,8 @@ private data class CodeAnimationHelper(
                 text.value = ""
                 animateScale()
             }
+
+            loginViewModel.notifySwitchScreen()
         }
     }
 
@@ -429,6 +433,7 @@ private data class CodeAnimationHelper(
             if (isStatusUpdating && isSuccess) {
                 isStatusUpdating = false
                 isSuccess = false
+                loginViewModel.notifySwitchScreen()
                 appState.navigateTo(Route.LoginUsername, true)
             } else if (isStatusUpdating) {
                 isReverseStatusUpdating = true
