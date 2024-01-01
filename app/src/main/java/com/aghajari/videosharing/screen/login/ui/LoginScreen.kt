@@ -89,8 +89,9 @@ fun LoginScreen(
             imageModel = R.drawable.arrow,
             isLoading = state.value == ScreenState.LOADING,
             modifier = Modifier
-                .align(Alignment.BottomEnd)
                 .padding(24.dp)
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 24.dp)
                 .size(56.dp)
         ) {
             loginViewModel.updateEmailAddress(text.value)

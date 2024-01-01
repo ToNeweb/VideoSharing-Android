@@ -26,9 +26,17 @@ class LoginViewModel : ScreenViewModel() {
         }
     }
 
-    suspend fun updateUsername(username: String?): Boolean {
-        this.username = username
-        return true
+    fun updateUsername(name: String?) {
+        launchIO {
+            updateState(ScreenState.LOADING)
+            delay(1000)
+            if (!name.isNullOrEmpty() && name.length > 4) {
+                username = name
+                updateState(ScreenState.SUCCESS)
+            } else {
+                updateState(ScreenState.ERROR)
+            }
+        }
     }
 
     fun validateCode(code: String) {
