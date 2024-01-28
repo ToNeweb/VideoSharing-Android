@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -40,10 +41,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aghajari.videosharing.R
+import com.aghajari.videosharing.viewmodel.ScreenState
+import com.aghajari.videosharing.viewmodel.hasResponse
 import com.aghajari.videosharing.nav.AppState
 import com.aghajari.videosharing.nav.LocalAppState
 import com.aghajari.videosharing.nav.Route
-import com.aghajari.videosharing.screen.login.model.ValidationStatus
 import com.aghajari.videosharing.screen.login.viewmodel.LoginViewModel
 import com.aghajari.videosharing.ui.animation.OvershootEasing
 import com.aghajari.videosharing.ui.component.Image
@@ -66,18 +68,20 @@ fun LoginValidationScreen(
         CodeAnimationHelper(
             scope,
             appState,
+            loginViewModel,
             selectedColor.toArgb(),
             defaultColor.toArgb(),
             Color.Red.toArgb(),
             Color.Green.toArgb()
         )
     }
-    val status = loginViewModel.validationStatus.collectAsState()
-    code.updateValidationStatus(status.value)
-    loginViewModel.clearValidation()
+    val state = loginViewModel.state.collectAsState()
+    code.updateValidationStatus(state.value)
 
     if (code.text.value.length == 5) {
-        loginViewModel.validateCode(code.text.value)
+        LaunchedEffect(code.text.value) {
+            loginViewModel.validateCode(code.text.value)
+        }
     }
 
     Column(
@@ -256,6 +260,7 @@ private fun RowScope.KeyboardButton(
 private data class CodeAnimationHelper(
     val scope: CoroutineScope,
     val appState: AppState,
+    val loginViewModel: LoginViewModel,
     val selectedColor: Int,
     val defaultColor: Int,
     val errorColor: Int,
@@ -280,16 +285,20 @@ private data class CodeAnimationHelper(
     var scaledText: String = ""
         private set
 
-    fun updateValidationStatus(status: ValidationStatus) {
-        if (status != ValidationStatus.NO_RES) {
+    fun updateValidationStatus(state: ScreenState) {
+        if (state.hasResponse()) {
             isStatusUpdating = true
             isReverseStatusUpdating = false
-            isSuccess = status == ValidationStatus.SUCCESS
+            isSuccess = state == ScreenState.SUCCESS
             animateStatusColor()
 
-            scaledText = text.value
-            text.value = ""
-            animateScale()
+            if (!isSuccess) {
+                scaledText = text.value
+                text.value = ""
+                animateScale()
+            }
+
+            loginViewModel.notifySwitchScreen()
         }
     }
 
@@ -421,7 +430,12 @@ private data class CodeAnimationHelper(
                 )
             )
 
-            if (isStatusUpdating) {
+            if (isStatusUpdating && isSuccess) {
+                isStatusUpdating = false
+                isSuccess = false
+                loginViewModel.notifySwitchScreen()
+                appState.navigateTo(Route.LoginUsername, true)
+            } else if (isStatusUpdating) {
                 isReverseStatusUpdating = true
                 isStatusUpdating = false
                 colorExitIndex = -1
@@ -430,10 +444,6 @@ private data class CodeAnimationHelper(
             } else if (isReverseStatusUpdating) {
                 isReverseStatusUpdating = false
                 statusFraction.animateTo(0f)
-
-                if (isSuccess) {
-                    appState.navigateTo(Route.LoginUsername)
-                }
             }
         }
     }

@@ -45,7 +45,9 @@ fun Navigation(
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.getDirection()
         : AnimatedContentTransitionScope.SlideDirection {
-    return if (initialState.destination.id < targetState.destination.id) {
+    val target = Route.values().indexOfFirst { it.name == targetState.destination.route }
+    val initial = Route.values().indexOfFirst { it.name == initialState.destination.route }
+    return if (target >= initial) {
         AnimatedContentTransitionScope.SlideDirection.Start
     } else {
         AnimatedContentTransitionScope.SlideDirection.End
