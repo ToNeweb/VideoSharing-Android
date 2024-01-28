@@ -1,4 +1,4 @@
-package com.aghajari.videosharing.model
+package com.aghajari.videosharing.viewmodel
 
 enum class ScreenState {
     LOADING,

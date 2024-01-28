@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aghajari.videosharing.R
-import com.aghajari.videosharing.model.ScreenState
+import com.aghajari.videosharing.viewmodel.ScreenState
 import com.aghajari.videosharing.nav.LocalAppState
 import com.aghajari.videosharing.nav.Route
 import com.aghajari.videosharing.screen.login.viewmodel.LoginViewModel

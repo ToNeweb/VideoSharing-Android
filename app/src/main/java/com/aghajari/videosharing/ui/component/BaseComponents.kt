@@ -2,6 +2,8 @@ package com.aghajari.videosharing.ui.component
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -40,18 +43,22 @@ fun Image(
     @DrawableRes failureImageRes: Int = placeholder,
     requestBuilder: (RequestBuilder<Drawable>) -> Unit = {}
 ) {
-    GlideImage(
-        modifier = modifier,
-        model = imageModel,
-        contentDescription = contentDescription,
-        contentScale = contentScale,
-        alignment = alignment,
-        colorFilter = colorFilter
-    ) { builder ->
-        builder
-            .placeholder(placeholder)
-            .error(failureImageRes)
-            .apply(requestBuilder)
+    if (LocalInspectionMode.current) {
+        Spacer(modifier = modifier.background(MaterialTheme.colorScheme.secondary))
+    } else {
+        GlideImage(
+            modifier = modifier,
+            model = imageModel,
+            contentDescription = contentDescription,
+            contentScale = contentScale,
+            alignment = alignment,
+            colorFilter = colorFilter
+        ) { builder ->
+            builder
+                .placeholder(placeholder)
+                .error(failureImageRes)
+                .apply(requestBuilder)
+        }
     }
 }
 

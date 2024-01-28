@@ -1,8 +1,8 @@
 package com.aghajari.videosharing.screen.login.viewmodel
 
 import android.util.Patterns
-import com.aghajari.videosharing.model.ScreenState
-import com.aghajari.videosharing.model.ScreenViewModel
+import com.aghajari.videosharing.viewmodel.ScreenState
+import com.aghajari.videosharing.viewmodel.ScreenViewModel
 import kotlinx.coroutines.delay
 
 class LoginViewModel : ScreenViewModel() {
