@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.aghajari.videosharing.utils.TEST_TAG_FLOAT_BUTTON
 
 @Composable
 fun FloatingButton(
@@ -21,7 +23,9 @@ fun FloatingButton(
     onClick: () -> Unit
 ) {
     Surface(
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier
+            .testTag(TEST_TAG_FLOAT_BUTTON)
+            .clickable(onClick = onClick),
         shape = CircleShape,
         shadowElevation = 2.dp,
         color = MaterialTheme.colorScheme.primary

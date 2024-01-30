@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -26,23 +27,28 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         setContent {
-            VideoSharingTheme {
-                CompositionLocalProvider(
-                    LocalAppState provides rememberAppState()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                    ) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            imageModel = R.drawable.background,
-                            contentScale = ContentScale.Crop
-                        )
-                        Navigation()
-                    }
-                }
+            MainScreen()
+        }
+    }
+}
+
+@Composable
+fun MainScreen() {
+    VideoSharingTheme {
+        CompositionLocalProvider(
+            LocalAppState provides rememberAppState()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    imageModel = R.drawable.background,
+                    contentScale = ContentScale.Crop
+                )
+                Navigation()
             }
         }
     }

@@ -22,10 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.aghajari.videosharing.utils.TEST_TAG_TEXT_FIELD
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -72,6 +74,7 @@ fun OutlinedTextField(
 ) {
     OutlinedTextField(
         modifier = Modifier
+            .testTag(TEST_TAG_TEXT_FIELD)
             .fillMaxWidth()
             .padding(horizontal = 34.dp),
         value = text.value,

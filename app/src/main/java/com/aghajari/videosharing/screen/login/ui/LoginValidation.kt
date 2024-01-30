@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +53,8 @@ import com.aghajari.videosharing.ui.component.Image
 import com.aghajari.videosharing.ui.component.Space
 import com.aghajari.videosharing.ui.preview.VideoSharingPreview
 import com.aghajari.videosharing.ui.text.bold
+import com.aghajari.videosharing.utils.TEST_TAG_CODE_ROW
+import com.aghajari.videosharing.utils.TEST_TAG_KEYBOARD
 import com.aghajari.videosharing.utils.sharedViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -169,6 +172,7 @@ private fun CodeRow(
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
+                        .testTag(TEST_TAG_CODE_ROW)
                         .offset(y = 2.dp + offset)
                         .scale(scale)
                 )
@@ -230,6 +234,7 @@ private fun RowScope.KeyboardButton(
                 shape = shape
             )
             .clip(shape)
+            .testTag(TEST_TAG_KEYBOARD + button.toString())
             .clickable {
                 if (button >= 0 && code.text.value.length < 5) {
                     code.enter(button)
